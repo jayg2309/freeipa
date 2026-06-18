@@ -635,12 +635,25 @@ class UI_driver:
 
     def get_dialog(self, strict=False, name=None):
         """
-        Get last opened dialog
+        Get last opened dialog.
+
+        Prefers visible dialogs to avoid returning a closed/hidden dialog
+        that hasn't been removed from the DOM yet.
         """
         dialogs = self.get_dialogs(strict, name)
         dialog = None
         if len(dialogs):
-            dialog = dialogs[-1]
+            visible = []
+            for d in dialogs:
+                try:
+                    if d.is_displayed():
+                        visible.append(d)
+                except StaleElementReferenceException:
+                    continue
+            if visible:
+                dialog = visible[-1]
+            else:
+                dialog = dialogs[-1]
         return dialog
 
     def get_last_error_dialog(self, dialog_name='error_dialog'):
