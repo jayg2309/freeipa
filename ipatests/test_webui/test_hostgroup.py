@@ -277,9 +277,7 @@ class test_hostgroup(UI_driver):
         self.dialog_button_click('add')
         assert hostgroup.DESCRIPTION_ERROR_DIALOG in \
             self.get_last_error_dialog().text
-        self.dialog_button_click('cancel')
-        self.wait(0.6)  # wait for modal dialog to appear
-        self.dialog_button_click('cancel')
+        self.close_all_dialogs()
 
         # duplicate
         self.button_click(name='add')
@@ -287,15 +285,14 @@ class test_hostgroup(UI_driver):
         self.dialog_button_click('add')
         assert hostgroup.DUPLICATE_WARNING_MSG in \
             self.get_last_error_dialog().text
-        self.dialog_button_click('cancel')
-        self.dialog_button_click('cancel')
+        self.close_all_dialogs()
 
         self.button_click(name='add')
         self.fill_input('cn', "")
         self.dialog_button_click('add')
         text_warning = self.get_text('.help-block', parent=self.get_dialog())
         assert text_warning in hostgroup.EMPTY_WARNING_MSG
-        self.dialog_button_click(name='cancel')
+        self.dialog_button_clinick(name='cancel')
 
         # test buttons
         self.button_click('add')
